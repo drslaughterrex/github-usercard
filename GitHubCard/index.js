@@ -10,10 +10,9 @@ const cardsSelector = document.querySelector(".cards");
 axios
 	.get("https://api.github.com/users/drslaughterrex")
 	.then((futureData) => {
-    console.log(futureData);
-    const userCard = cardMaker(futureData);
-    cardsSelector.appendChild(userCard);
-		
+		console.log(futureData);
+		const userCard = cardMaker(futureData);
+		cardsSelector.appendChild(userCard);
 	})
 	.catch((error) => {
 		console.log(error);
@@ -33,10 +32,20 @@ console.log("3. we requested the data with axios");
     and append the returned markup to the DOM as a child of .cards
 */
 
-futureData.forEach((cardDataObj) => {
-  const newCard = cardMaker(cardDataObj)
-  cardsSelector.append(newCard);
-})
+function appendUserCard(username) {
+	axios
+		.get(`https://api.github.com/users/${username}`)
+		.then((res) => {
+			const card = cardMaker(res.data);
+			document.querySelector(".cards").appendChild(card);
+		})
+		.catch((err) => {
+			console.log(err);
+		})
+		.finally(() => {
+			console.log("done");
+		});
+}
 
 /*
   STEP 5: Now that you have your own card getting added to the DOM, either
@@ -49,30 +58,24 @@ futureData.forEach((cardDataObj) => {
     user, and adding that card to the DOM.
 */
 
-const followersArray = [
-	"tetondan",
-	"dustinmyers",
-	"justsml",
-	"luishrd",
-	"bigknell",
-];
+const followersArray = [];
 
-// axios
-// 	.get(`https://api.github.com/users/{username}/followers`)
-// 	.then((res) => {
-// 		res.data.forEach((user) => {
-// 			followersArray.push(user.login);
-// 		});
-// 		followersArray.forEach((username) => {
-// 			appendUserCard(username);
-// 		});
-// 	})
-// 	.catch((err) => {
-// 		console.log(err);
-// 	})
-// 	.finally(() => {
-// 		console.log("done");
-// 	});
+axios
+	.get(`https://api.github.com/users/drslaughterrex/followers`)
+	.then((res) => {
+		res.data.forEach((user) => {
+			followersArray.push(user.login);
+		});
+		followersArray.forEach((username) => {
+			appendUserCard(username);
+		});
+	})
+	.catch((err) => {
+		console.log(err);
+	})
+	.finally(() => {
+		console.log("done");
+	});
 
 /*
   STEP 3: Create a function that accepts a single object as its only argument.
@@ -94,11 +97,9 @@ const followersArray = [
     </div>
 */
 
-
-
 function cardMaker(obj) {
-  // const {name, avatar_url, login, location, html_url, followers, following, bio} = obj;
-  
+	// const {name, avatar_url, login, location, html_url, followers, following, bio} = obj;
+
 	const cardDiv = document.createElement("div");
 	const cardImg = document.createElement("img");
 	const infoDiv = document.createElement("div");
@@ -116,24 +117,22 @@ function cardMaker(obj) {
 	pUsername.classList.add("username");
 	infoDiv.classList.add("card-info");
 
-
-
 	cardImg.src = obj.data.avatar_url;
 	nameH3.textContent = obj.data.name;
 	pUsername.textContent = obj.data.login;
-	pLocation.textContent = 'Location: ' + obj.data.location;
-  pProfile.textContent = 'Profile: '
-	aProfLink.textContent =  obj.data.html_url;
+	pLocation.textContent = "Location: " + obj.data.location;
+	pProfile.textContent = "Profile: ";
+	aProfLink.textContent = obj.data.html_url;
 	aProfLink.href = obj.data.html_url;
 	// pFollowers.textContent ='Followers: ' + obj.data.followers;
-	pFollowers.textContent =`Followers: ${obj.data.followers}`;
-	pFollowing.textContent = 'Following: ' + obj.data.following;
-	pBio.textContent = 'Bio: ' + obj.data.bio;
+	pFollowers.textContent = `Followers: ${obj.data.followers}`;
+	pFollowing.textContent = "Following: " + obj.data.following;
+	pBio.textContent = "Bio: " + obj.data.bio;
 
 	cardDiv.appendChild(cardImg);
-  cardDiv.appendChild(infoDiv);
+	cardDiv.appendChild(infoDiv);
 	infoDiv.appendChild(nameH3);
-  infoDiv.appendChild(pUsername);
+	infoDiv.appendChild(pUsername);
 	infoDiv.appendChild(pLocation);
 	infoDiv.appendChild(pProfile);
 	pProfile.appendChild(aProfLink);
@@ -141,16 +140,14 @@ function cardMaker(obj) {
 	infoDiv.appendChild(pFollowing);
 	infoDiv.appendChild(pBio);
 
-
-
 	return cardDiv;
 }
 
 /*
   List of LS Instructors Github username's:
-    tetondan
-    dustinmyers
-    justsml
-    luishrd
-    bigknell
+ 'tetondan',
+  'dustinmyers',
+  'justsml',
+  'luishrd',
+  'bigknell',
 */
