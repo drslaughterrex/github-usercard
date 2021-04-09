@@ -10,7 +10,7 @@ const cardsSelector = document.querySelector(".cards");
 axios
 	.get("https://api.github.com/users/drslaughterrex")
 	.then((futureData) => {
-		console.log(futureData);
+		// console.log(futureData);
 		const userCard = cardMaker(futureData);
 		cardsSelector.appendChild(userCard);
 	})
@@ -36,7 +36,7 @@ function appendUserCard(username) {
 	axios
 		.get(`https://api.github.com/users/${username}`)
 		.then((res) => {
-			const card = cardMaker(res.data);
+			const card = cardMaker(res);
 			document.querySelector(".cards").appendChild(card);
 		})
 		.catch((err) => {
@@ -99,7 +99,7 @@ axios
 
 function cardMaker(obj) {
 	// const {name, avatar_url, login, location, html_url, followers, following, bio} = obj;
-
+	// console.log(obj)
 	const cardDiv = document.createElement("div");
 	const cardImg = document.createElement("img");
 	const infoDiv = document.createElement("div");
